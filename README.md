@@ -2,6 +2,12 @@
 
 A fully-featured, enterprise-grade Tic Tac Toe application demonstrating modern full-stack web development patterns, built with Angular 18 (Strict Mode, Zoneless) and an ASP.NET Core 8 Web API.
 
+- **GitHub Repo Address**: [https://github.com/UjjwalSharma112/ABB-Tic-Tac-Toe-Game](https://github.com/UjjwalSharma112/ABB-Tic-Tac-Toe-Game)
+- **Live Demo URL**: [https://ais-pre-q6tw5dw7fbevn5e6nbntt3-518757711428.asia-east1.run.app](https://ais-pre-q6tw5dw7fbevn5e6nbntt3-518757711428.asia-east1.run.app)
+- **Backend Port**: `http://localhost:5033`
+- **Frontend Port**: `http://localhost:3000`
+- **Swagger UI Port**: `http://localhost:5033/swagger`
+
 ## 1. Project Overview
 This application provides a browser-based Tic Tac Toe environment designed to be highly interactive and robust. It highlights advanced state management capabilities across an Angular client interacting with a secure, thread-safe .NET backend. Users can compete locally in Player vs. Player mode, or face off against an adjustable Computer opponent. It accurately synchronizes move histories, calculates chronological state restorations (undo moves), and persists session scoreboards.
 
@@ -24,22 +30,35 @@ This application provides a browser-based Tic Tac Toe environment designed to be
 - **Session Scoreboard**: Decoupled persistent scoreboard isolating metrics between game modes.
 - **Move History Log**: Full logging module detailing the player coordinates, precise timing stamps, and execution order for audit trailing.
 
-## 4. How to run the backend locally
-1. Ensure your system meets the requirement of the [.NET 8 SDK](https://dotnet.microsoft.com/download) installed globally.
-2. Initialize a terminal session within the root repository.
-3. Traverse into the backend application working directory:
+## 4. Prerequisites to start in local
+- **Node.js**: LTS version (18.x or newer) installed globally.
+- **.NET SDK**: 8.0 SDK installed globally.
+- **Git**: Source control for cloning the repository.
+
+## 5. Step by step clone and Run
+
+### Step 1: Clone the repository
+Launch a terminal and execute the following commands:
+```bash
+git clone https://github.com/UjjwalSharma112/ABB-Tic-Tac-Toe-Game.git
+cd ABB-Tic-Tac-Toe-Game
+```
+
+### Step 2: Start the Backend (.NET API)
+1. Traverse into the backend application working directory:
    ```bash
    cd backend-dotnet/TicTacToe.Api
    ```
-4. Restore dependencies and bootstrap the API service:
+2. Restore dependencies and bootstrap the API service:
    ```bash
    dotnet run
    ```
-   *The application will boot successfully, allocating the HTTP layer directly onto `http://localhost:5033`. The Swagger UI diagnostic interface will be natively available at `http://localhost:5033/swagger`.*
+- **Backend Port Address**: Native HTTP layer allocates directly onto `http://localhost:5033`.
+- **Swagger Documentation**: Native endpoints diagnostic UI available at `http://localhost:5033/swagger`.
 
-## 5. How to run the frontend locally
-1. Ensure that your development environment encompasses [Node.js](https://nodejs.org) LTS.
-2. Launch a command-line interface in the root application structure and install packages:
+### Step 3: Start the Frontend (Angular)
+1. Open a new terminal session organically bound to the root application structure.
+2. Install NPM packages:
    ```bash
    npm install
    ```
@@ -47,7 +66,7 @@ This application provides a browser-based Tic Tac Toe environment designed to be
    ```bash
    npm start
    ```
-4. Access the application interface organically via a web browser directed to `http://localhost:3000`. 
+- **Frontend Port Address**: Access the deployed browser interface at `http://localhost:3000`.
    
 ## 6. API Endpoint Summary
 - `POST /api/games` - Provision a new active game session state. Form payload targets Game Modes.
