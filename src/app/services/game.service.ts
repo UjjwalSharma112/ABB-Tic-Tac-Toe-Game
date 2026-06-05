@@ -1,15 +1,12 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
-import { GameState, GameMode, Scoreboard, Difficulty } from '../models/game';
-import { MockEngineService } from './mock-engine.service';
+import { GameState, GameMode, Scoreboard, Difficulty, Move } from '../models/game';
 
 @Injectable({providedIn: 'root'})
 export class GameService {
   private http = inject(HttpClient);
-  private mockEngine = inject(MockEngineService);
 
-  public useMock = signal<boolean>(true);
   public apiUrl = signal<string>('http://localhost:5033/api');
 
   public gameState = signal<GameState | null>(null);
@@ -21,12 +18,12 @@ export class GameService {
     this.createGame('PvP', 'Easy');
   }
 
-  toggleMode(useMock: boolean) {
-    this.useMock.set(useMock);
+  toggleMode() {
     this.refreshScoreboard();
     this.createGame(this.gameState()?.gameMode || 'PvP', this.gameState()?.difficulty || 'Easy');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private handleError(err: any) {
     console.error(err);
     let errorMsg = 'An error occurred';
@@ -43,21 +40,45 @@ export class GameService {
     return throwError(() => new Error(errorMsg));
   }
 
+  getGames() {
+    return this.http.get<GameState[]>(`${this.apiUrl()}/games`).pipe(
+        catchError(err => this.handleError(err))
+    );
+  }
+
+  getGame(gameId: string) {
+    this.http.get<GameState>(`${this.apiUrl()}/games/${gameId}`).pipe(
+        catchError(err => this.handleError(err))
+    ).subscribe(res => {
+        this.gameState.set(res);
+    });
+  }
+
+  getMoveHistory(gameId: string) {
+    this.http.get<Move[]>(`${this.apiUrl()}/games/${gameId}/moves`).pipe(
+        catchError(err => this.handleError(err))
+    ).subscribe(res => {
+        const state = this.gameState();
+        if (state) {
+            this.gameState.set({ ...state, moveHistory: res });
+        }
+    });
+  }
+
+  getMove(gameId: string, moveNumber: number) {
+    return this.http.get<Move>(`${this.apiUrl()}/games/${gameId}/moves/${moveNumber}`).pipe(
+        catchError(err => this.handleError(err))
+    );
+  }
+
   createGame(mode: GameMode, difficulty: Difficulty | null = 'Easy') {
     if (mode === 'PvP') difficulty = null;
-    if (this.useMock()) {
-       try {
-           const state = this.mockEngine.createGame(mode, difficulty);
-           this.gameState.set(state);
-       } catch (e: any) { this.error.set(e.message); }
-    } else {
-       this.http.post<GameState>(`${this.apiUrl()}/games`, { mode, difficulty }).pipe(
-           catchError(err => this.handleError(err))
-       ).subscribe(res => {
-         this.gameState.set(res);
-         this.error.set(null); // clear network error if successful
-       });
-    }
+    this.http.post<GameState>(`${this.apiUrl()}/games`, { mode, difficulty }).pipe(
+        catchError(err => this.handleError(err))
+    ).subscribe(res => {
+      this.gameState.set(res);
+      this.error.set(null); // clear network error if successful
+    });
   }
 
   makeMove(row: number, col: number) {
@@ -67,76 +88,45 @@ export class GameService {
     // UI bounds check optimistic
     if (state.status !== 'InProgress' || state.board[row][col] !== null) return;
 
-    if (this.useMock()) {
-      try {
-         const newState = this.mockEngine.makeMove(state.gameId, state.currentPlayer, row, col);
-         this.gameState.set(newState);
+    this.http.post<GameState>(`${this.apiUrl()}/games/${state.gameId}/moves`, { 
+      player: state.currentPlayer, row, col 
+    }).pipe(catchError(err => this.handleError(err)))
+      .subscribe(res => {
+         this.gameState.set(res);
          this.refreshScoreboard();
-      } catch (e: any) { this.error.set(e.message); }
-    } else {
-      this.http.post<GameState>(`${this.apiUrl()}/games/${state.gameId}/moves`, { 
-        player: state.currentPlayer, row, col 
-      }).pipe(catchError(err => this.handleError(err)))
-        .subscribe(res => {
-           this.gameState.set(res);
-           this.refreshScoreboard();
-        });
-    }
+      });
   }
 
   undoMove() {
      const state = this.gameState();
      if (!state) return;
-     if (this.useMock()) {
-        try {
-           const newState = this.mockEngine.undoMove(state.gameId);
-           this.gameState.set(newState);
-           this.refreshScoreboard();
-        } catch(e: any) { this.error.set(e.message); }
-     } else {
-        this.http.post<GameState>(`${this.apiUrl()}/games/${state.gameId}/undo`, {}).pipe(
-           catchError(err => this.handleError(err))
-        ).subscribe(res => {
-           this.gameState.set(res);
-           this.refreshScoreboard();
-        });
-     }
+     this.http.post<GameState>(`${this.apiUrl()}/games/${state.gameId}/undo`, {}).pipe(
+        catchError(err => this.handleError(err))
+     ).subscribe(res => {
+        this.gameState.set(res);
+        this.refreshScoreboard();
+     });
   }
 
   resetGame() {
     const state = this.gameState();
     if (!state) return;
-    if (this.useMock()) {
-       try {
-          const newState = this.mockEngine.resetGame(state.gameId);
-          this.gameState.set(newState);
-       } catch(e: any) { this.error.set(e.message); }
-    } else {
-       this.http.post<GameState>(`${this.apiUrl()}/games/${state.gameId}/reset`, {}).pipe(
-           catchError(err => this.handleError(err))
-       ).subscribe(res => this.gameState.set(res));
-    }
+    this.http.post<GameState>(`${this.apiUrl()}/games/${state.gameId}/reset`, {}).pipe(
+        catchError(err => this.handleError(err))
+    ).subscribe(res => {
+        this.gameState.set(res);
+    });
   }
 
   refreshScoreboard() {
-     if (this.useMock()) {
-        const score = this.mockEngine.getScoreboard();
-        this.scoreboard.set(score);
-     } else {
-        this.http.get<Scoreboard>(`${this.apiUrl()}/scoreboard`).pipe(
-           catchError(err => this.handleError(err))
-        ).subscribe(res => this.scoreboard.set(res));
-     }
+     this.http.get<Scoreboard>(`${this.apiUrl()}/scoreboard`).pipe(
+        catchError(err => this.handleError(err))
+     ).subscribe(res => this.scoreboard.set(res));
   }
 
   resetScoreboard() {
-     if (this.useMock()) {
-        const score = this.mockEngine.resetScoreboard();
-        this.scoreboard.set(score);
-     } else {
-        this.http.post<Scoreboard>(`${this.apiUrl()}/scoreboard/reset`, {}).pipe(
-           catchError(err => this.handleError(err))
-        ).subscribe(res => this.scoreboard.set(res));
-     }
+     this.http.post<Scoreboard>(`${this.apiUrl()}/scoreboard/reset`, {}).pipe(
+        catchError(err => this.handleError(err))
+     ).subscribe(res => this.scoreboard.set(res));
   }
 }

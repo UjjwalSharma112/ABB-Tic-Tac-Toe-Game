@@ -16,6 +16,12 @@ namespace TicTacToe.Api.Controllers
             _gameService = gameService;
         }
 
+        [HttpGet("games")]
+        public IActionResult GetGames()
+        {
+            return Ok(_gameService.GetGames());
+        }
+
         [HttpPost("games")]
         public IActionResult CreateGame([FromBody] CreateGameRequest request)
         {
@@ -27,6 +33,20 @@ namespace TicTacToe.Api.Controllers
         public IActionResult GetGame(string id)
         {
             try { return Ok(_gameService.GetGame(id)); }
+            catch (Exception ex) { return NotFound(new { error = ex.Message }); }
+        }
+
+        [HttpGet("games/{id}/moves")]
+        public IActionResult GetMoveHistory(string id)
+        {
+            try { return Ok(_gameService.GetMoveHistory(id)); }
+            catch (Exception ex) { return NotFound(new { error = ex.Message }); }
+        }
+
+        [HttpGet("games/{id}/moves/{moveNumber}")]
+        public IActionResult GetMove(string id, int moveNumber)
+        {
+            try { return Ok(_gameService.GetMove(id, moveNumber)); }
             catch (Exception ex) { return NotFound(new { error = ex.Message }); }
         }
 

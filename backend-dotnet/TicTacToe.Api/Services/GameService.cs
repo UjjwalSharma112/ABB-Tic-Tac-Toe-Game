@@ -8,8 +8,11 @@ namespace TicTacToe.Api.Services
 {
     public interface IGameService
     {
+        IEnumerable<GameState> GetGames();
         GameState CreateGame(string mode, string? difficulty = "Easy");
         GameState GetGame(string id);
+        IEnumerable<Move> GetMoveHistory(string id);
+        Move GetMove(string id, int moveNumber);
         GameState MakeMove(string id, string player, int row, int col);
         GameState UndoMove(string id);
         GameState ResetGame(string id);
@@ -22,6 +25,11 @@ namespace TicTacToe.Api.Services
         private readonly ConcurrentDictionary<string, GameState> _games = new();
         private Scoreboard _scoreboard = new();
         private readonly object _scoreLock = new();
+
+        public IEnumerable<GameState> GetGames()
+        {
+            return _games.Values.Select(Duplicate).ToList();
+        }
 
         public GameState CreateGame(string mode, string? difficulty = "Easy")
         {
@@ -64,6 +72,26 @@ namespace TicTacToe.Api.Services
         {
             if (!_games.TryGetValue(id, out var game)) throw new Exception("Game not found");
             return Duplicate(game);
+        }
+
+        public IEnumerable<Move> GetMoveHistory(string id)
+        {
+            if (!_games.TryGetValue(id, out var game)) throw new Exception("Game not found");
+            return Duplicate(game).MoveHistory;
+        }
+
+        public Move GetMove(string id, int moveNumber)
+        {
+            if (!_games.TryGetValue(id, out var game)) throw new Exception("Game not found");
+            var move = game.MoveHistory.FirstOrDefault(m => m.MoveNumber == moveNumber);
+            if (move == null) throw new Exception("Move not found");
+            return new Move
+            {
+                MoveNumber = move.MoveNumber,
+                Player = move.Player,
+                Position = new Position { Row = move.Position.Row, Col = move.Position.Col },
+                Timestamp = move.Timestamp
+            };
         }
 
         public GameState MakeMove(string id, string player, int row, int col)

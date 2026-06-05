@@ -22,10 +22,6 @@ export class App {
   get scores() { return this.gameService.scoreboard(); }
   get error() { return this.gameService.error(); }
 
-  setBackend(useMock: boolean) {
-    this.gameService.toggleMode(useMock);
-  }
-
   setGameMode(mode: GameMode) {
     this.currentMode = mode;
     this.gameService.createGame(this.currentMode, this.currentDifficulty);
