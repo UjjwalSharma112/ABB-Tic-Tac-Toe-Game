@@ -16,7 +16,7 @@ export class App {
   public gameService = inject(GameService);
 
   public currentMode: GameMode = 'PvP';
-  public currentDifficulty: Difficulty = 'Hard';
+  public currentDifficulty: Difficulty = 'Easy';
 
   get state() { return this.gameService.gameState(); }
   get scores() { return this.gameService.scoreboard(); }

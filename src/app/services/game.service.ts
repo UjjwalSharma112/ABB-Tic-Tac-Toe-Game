@@ -18,13 +18,13 @@ export class GameService {
 
   constructor() {
     this.refreshScoreboard();
-    this.createGame('PvP', 'Hard');
+    this.createGame('PvP', 'Easy');
   }
 
   toggleMode(useMock: boolean) {
     this.useMock.set(useMock);
     this.refreshScoreboard();
-    this.createGame(this.gameState()?.gameMode || 'PvP', this.gameState()?.difficulty || 'Hard');
+    this.createGame(this.gameState()?.gameMode || 'PvP', this.gameState()?.difficulty || 'Easy');
   }
 
   private handleError(err: any) {
@@ -43,7 +43,7 @@ export class GameService {
     return throwError(() => new Error(errorMsg));
   }
 
-  createGame(mode: GameMode, difficulty: Difficulty | null = 'Hard') {
+  createGame(mode: GameMode, difficulty: Difficulty | null = 'Easy') {
     if (mode === 'PvP') difficulty = null;
     if (this.useMock()) {
        try {

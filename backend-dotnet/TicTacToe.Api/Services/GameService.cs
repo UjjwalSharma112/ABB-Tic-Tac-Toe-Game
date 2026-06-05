@@ -8,7 +8,7 @@ namespace TicTacToe.Api.Services
 {
     public interface IGameService
     {
-        GameState CreateGame(string mode, string? difficulty = "Hard");
+        GameState CreateGame(string mode, string? difficulty = "Easy");
         GameState GetGame(string id);
         GameState MakeMove(string id, string player, int row, int col);
         GameState UndoMove(string id);
@@ -23,7 +23,7 @@ namespace TicTacToe.Api.Services
         private Scoreboard _scoreboard = new();
         private readonly object _scoreLock = new();
 
-        public GameState CreateGame(string mode, string? difficulty = "Hard")
+        public GameState CreateGame(string mode, string? difficulty = "Easy")
         {
             if (string.Equals(mode, "PvP", StringComparison.OrdinalIgnoreCase)) mode = "PvP";
             else if (string.Equals(mode, "PvC", StringComparison.OrdinalIgnoreCase)) mode = "PvC";

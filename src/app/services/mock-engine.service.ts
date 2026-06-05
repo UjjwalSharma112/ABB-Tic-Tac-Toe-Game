@@ -9,7 +9,7 @@ export class MockEngineService {
     pvc: { xWins: 0, oWins: 0, draws: 0 }
   };
 
-  createGame(mode: GameMode, difficulty: Difficulty | null = 'Hard'): GameState {
+  createGame(mode: GameMode, difficulty: Difficulty | null = 'Easy'): GameState {
     if (mode === 'PvC' && !difficulty) {
       throw new Error('Difficulty is required for PvC mode.');
     }
@@ -60,8 +60,8 @@ export class MockEngineService {
     if (game.moveHistory.length === 0) throw new Error('No moves to undo');
 
     const wasCompleted = game.status !== 'InProgress';
-    let oldWinner = game.winner;
-    let oldStatus = game.status;
+    const oldWinner = game.winner;
+    const oldStatus = game.status;
 
     if (game.gameMode === 'PvP') {
        const lastMove = game.moveHistory.pop()!;
