@@ -8,7 +8,7 @@ namespace TicTacToe.Api.Services
 {
     public interface IGameService
     {
-        GameState CreateGame(string mode, string difficulty = "Hard");
+        GameState CreateGame(string mode, string? difficulty = "Hard");
         GameState GetGame(string id);
         GameState MakeMove(string id, string player, int row, int col);
         GameState UndoMove(string id);
@@ -23,8 +23,25 @@ namespace TicTacToe.Api.Services
         private Scoreboard _scoreboard = new();
         private readonly object _scoreLock = new();
 
-        public GameState CreateGame(string mode, string difficulty = "Hard")
+        public GameState CreateGame(string mode, string? difficulty = "Hard")
         {
+            if (string.Equals(mode, "PvP", StringComparison.OrdinalIgnoreCase)) mode = "PvP";
+            else if (string.Equals(mode, "PvC", StringComparison.OrdinalIgnoreCase)) mode = "PvC";
+            else throw new ArgumentException("Invalid game mode. Must be 'PvP' or 'PvC'.");
+
+            if (mode == "PvC")
+            {
+                if (string.IsNullOrEmpty(difficulty)) throw new ArgumentException("Difficulty is required for PvC mode.");
+                if (string.Equals(difficulty, "Easy", StringComparison.OrdinalIgnoreCase)) difficulty = "Easy";
+                else if (string.Equals(difficulty, "Medium", StringComparison.OrdinalIgnoreCase)) difficulty = "Medium";
+                else if (string.Equals(difficulty, "Hard", StringComparison.OrdinalIgnoreCase)) difficulty = "Hard";
+                else throw new ArgumentException("Invalid difficulty. Must be 'Easy', 'Medium', or 'Hard'.");
+            }
+            else
+            {
+                difficulty = null;
+            }
+
             var game = new GameState
             {
                 GameId = Guid.NewGuid().ToString(),

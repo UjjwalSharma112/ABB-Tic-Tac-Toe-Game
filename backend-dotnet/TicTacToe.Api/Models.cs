@@ -23,7 +23,7 @@ namespace TicTacToe.Api.Models
         public string?[][] Board { get; set; } = Array.Empty<string?[]>();
         public string CurrentPlayer { get; set; } = string.Empty;
         public string GameMode { get; set; } = string.Empty;
-        public string Difficulty { get; set; } = "Hard";
+        public string? Difficulty { get; set; }
         public string Status { get; set; } = string.Empty;
         public string? Winner { get; set; }
         public List<Position> WinningCells { get; set; } = new();
@@ -46,7 +46,7 @@ namespace TicTacToe.Api.Models
     public class CreateGameRequest
     {
         public string Mode { get; set; } = "PvP";
-        public string Difficulty { get; set; } = "Hard";
+        public string? Difficulty { get; set; }
     }
 
     public class MakeMoveRequest

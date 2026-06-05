@@ -43,7 +43,8 @@ export class GameService {
     return throwError(() => new Error(errorMsg));
   }
 
-  createGame(mode: GameMode, difficulty: Difficulty = 'Hard') {
+  createGame(mode: GameMode, difficulty: Difficulty | null = 'Hard') {
+    if (mode === 'PvP') difficulty = null;
     if (this.useMock()) {
        try {
            const state = this.mockEngine.createGame(mode, difficulty);

@@ -15,7 +15,7 @@ export interface GameState {
   board: Player[][];
   currentPlayer: Player;
   gameMode: GameMode;
-  difficulty: Difficulty;
+  difficulty: Difficulty | null;
   status: GameStatus;
   winner: Player;
   winningCells: { row: number, col: number }[];

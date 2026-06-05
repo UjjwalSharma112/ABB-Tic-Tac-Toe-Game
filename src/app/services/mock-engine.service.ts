@@ -9,11 +9,14 @@ export class MockEngineService {
     pvc: { xWins: 0, oWins: 0, draws: 0 }
   };
 
-  createGame(mode: GameMode, difficulty: Difficulty = 'Hard'): GameState {
+  createGame(mode: GameMode, difficulty: Difficulty | null = 'Hard'): GameState {
+    if (mode === 'PvC' && !difficulty) {
+      throw new Error('Difficulty is required for PvC mode.');
+    }
     const gameId = crypto.randomUUID();
     const board: Player[][] = Array(3).fill(null).map(() => Array(3).fill(null));
     const state: GameState = {
-      gameId, board, currentPlayer: 'X', gameMode: mode, difficulty, status: 'InProgress', winner: null, winningCells: [], moveHistory: []
+      gameId, board, currentPlayer: 'X', gameMode: mode, difficulty: mode === 'PvP' ? null : difficulty, status: 'InProgress', winner: null, winningCells: [], moveHistory: []
     };
     this.games.set(gameId, state);
     return this.clone(state);
