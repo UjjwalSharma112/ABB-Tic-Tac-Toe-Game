@@ -34,6 +34,7 @@ This application provides a browser-based Tic Tac Toe environment designed to be
 - **Node.js**: LTS version (18.x or newer) installed globally.
 - **.NET SDK**: 8.0 SDK installed globally.
 - **Git**: Source control for cloning the repository.
+- **Visual Studio 2022** (Optional): The solution includes a `.sln` file for an enhanced backend development experience.
 
 ## 5. Step by step clone and Run
 
@@ -45,6 +46,8 @@ cd ABB-Tic-Tac-Toe-Game
 ```
 
 ### Step 2: Start the Backend (.NET API)
+
+**Option A: Using the .NET CLI**
 1. Traverse into the backend application working directory:
    ```bash
    cd backend-dotnet/TicTacToe.Api
@@ -53,6 +56,13 @@ cd ABB-Tic-Tac-Toe-Game
    ```bash
    dotnet run
    ```
+
+**Option B: Using Visual Studio 2022**
+1. Navigate to the `backend-dotnet` folder.
+2. Double-click on `TicTacToe.sln` to open the solution in Visual Studio 2022.
+3. Ensure `TicTacToe.Api` is set as the startup project.
+4. Press `F5` or click **Run** to build and start the backend.
+
 - **Backend Port Address**: Native HTTP layer allocates directly onto `http://localhost:5033`.
 - **Swagger Documentation**: Native endpoints diagnostic UI available at `http://localhost:5033/swagger`.
 
@@ -79,7 +89,9 @@ cd ABB-Tic-Tac-Toe-Game
 
 ## 7. How to run tests
 The backend integration incorporates comprehensive automated unit tests covering structural business logic parameters (board state processing, validation rule chains).
-1. Navigate to the targeted `.NET` test assembly suite:
+
+**Option A: Using the .NET CLI**
+1. Navigate to the targeted `.NET` test assembly suite (or the solution root):
    ```bash
    cd backend-dotnet/TicTacToe.Tests
    ```
@@ -87,6 +99,11 @@ The backend integration incorporates comprehensive automated unit tests covering
    ```bash
    dotnet test
    ```
+
+**Option B: Using Visual Studio 2022**
+1. Open `TicTacToe.sln` in Visual Studio.
+2. Open the **Test Explorer** (`Test > Test Explorer`).
+3. Click the **Run All Tests** button.
 
 ## 8. AI Tools and Prompt Summary
 **AI Facilitation Methodologies**: Built collaboratively using AI-assisted pair programming paradigms (specifically leveraging large context-window models like Gemini 1.5 Pro). To maximize code quality and architectural soundness, the interaction followed strict systemic prompting and contextual grounding techniques akin to practices established by seasoned Prompt Engineers.

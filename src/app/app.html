@@ -35,7 +35,7 @@
                 [class.text-indigo-900/60]="state?.gameMode !== 'PvP'"
                 [class.hover:bg-white/40]="state?.gameMode !== 'PvP'"
                 (click)="setGameMode('PvP')">
-                PvP
+                Player vs Player
               </button>
               <button class="px-6 py-2 text-sm font-bold tracking-wider uppercase rounded-lg transition-transform border-2"
                 [class.bg-yellow-400]="state?.gameMode === 'PvC'"
@@ -47,7 +47,7 @@
                 [class.text-indigo-900/60]="state?.gameMode !== 'PvC'"
                 [class.hover:bg-white/40]="state?.gameMode !== 'PvC'"
                 (click)="setGameMode('PvC')">
-                PvC
+                Player vs Computer
               </button>
            </div>
            
@@ -155,7 +155,7 @@
            @if (state?.gameMode === 'PvP') {
              <!-- PvP Stats -->
              <div class="p-4 bg-white border-4 border-indigo-900 shadow-[4px_4px_0_theme(colors.indigo.900)] rounded-xl relative">
-                <h4 class="text-xs font-black text-indigo-900/60 uppercase tracking-widest mb-3">Two Player (PvP)</h4>
+                <h4 class="text-xs font-black text-indigo-900/60 uppercase tracking-widest mb-3">Two Player (Player vs Player)</h4>
                 <div class="flex justify-between items-end mb-2 bg-indigo-50 p-2 rounded-lg border-2 border-indigo-100">
                    <span class="text-base font-bold text-indigo-900">Player X</span>
                    <span class="text-3xl font-black font-mono text-fuchsia-600">{{ scores?.pvp?.xWins || 0 }}</span>
@@ -172,7 +172,7 @@
            } @else {
              <!-- PvC Stats -->
              <div class="p-4 bg-white border-4 border-indigo-900 shadow-[4px_4px_0_theme(colors.indigo.900)] rounded-xl relative">
-                <h4 class="text-xs font-black text-indigo-900/60 uppercase tracking-widest mb-3">Computer (PvC)</h4>
+                <h4 class="text-xs font-black text-indigo-900/60 uppercase tracking-widest mb-3">Computer (Player vs Computer)</h4>
                 <div class="flex justify-between items-end mb-2 bg-indigo-50 p-2 rounded-lg border-2 border-indigo-100">
                    <span class="text-base font-bold text-indigo-900">Player X</span>
                    <span class="text-3xl font-black font-mono text-fuchsia-600">{{ scores?.pvc?.xWins || 0 }}</span>

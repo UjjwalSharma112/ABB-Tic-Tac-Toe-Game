@@ -45,3 +45,12 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# .NET / Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.userprefs
+TestResults/
+
