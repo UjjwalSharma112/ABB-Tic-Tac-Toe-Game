@@ -40,6 +40,16 @@ export class GameService {
     return throwError(() => new Error(errorMsg));
   }
 
+  private normalizeScoreboard(raw: any): Scoreboard {
+    const pvp = raw?.pvp ?? raw?.pvP ?? { xWins: 0, oWins: 0, draws: 0 };
+    const pvc = raw?.pvc ?? raw?.pvC ?? { xWins: 0, oWins: 0, draws: 0 };
+
+    return {
+      pvp: { xWins: pvp.xWins ?? 0, oWins: pvp.oWins ?? 0, draws: pvp.draws ?? 0 },
+      pvc: { xWins: pvc.xWins ?? 0, oWins: pvc.oWins ?? 0, draws: pvc.draws ?? 0 }
+    } as Scoreboard;
+  }
+
   getGames() {
     return this.http.get<GameState[]>(`${this.apiUrl()}/games`).pipe(
         catchError(err => this.handleError(err))
@@ -121,12 +131,12 @@ export class GameService {
   refreshScoreboard() {
      this.http.get<Scoreboard>(`${this.apiUrl()}/scoreboard`).pipe(
         catchError(err => this.handleError(err))
-     ).subscribe(res => this.scoreboard.set(res));
+     ).subscribe(res => this.scoreboard.set(this.normalizeScoreboard(res)));
   }
 
   resetScoreboard() {
      this.http.post<Scoreboard>(`${this.apiUrl()}/scoreboard/reset`, {}).pipe(
         catchError(err => this.handleError(err))
-     ).subscribe(res => this.scoreboard.set(res));
+     ).subscribe(res => this.scoreboard.set(this.normalizeScoreboard(res)));
   }
 }
