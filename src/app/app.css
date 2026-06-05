@@ -1,0 +1,17 @@
+/* Add any component-specific styles here. Most styling is handled by Tailwind. */
+
+/* Optional subtle scroller styling for webkit */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e7e5e4; 
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d6d3d1; 
+}

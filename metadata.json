@@ -1,0 +1,6 @@
+{
+  "name": "ABB Tic Tac Toe",
+  "description": "A full-stack Angular 18 and .NET 8 Web API assessment for Tic Tac Toe.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
