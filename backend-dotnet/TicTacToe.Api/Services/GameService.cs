@@ -112,6 +112,7 @@ namespace TicTacToe.Api.Services
                     Position = new Position { Row = row, Col = col },
                     Timestamp = DateTime.UtcNow
                 });
+                game.CanUndo = true;
 
                 UpdateGameStatus(game);
 
@@ -130,6 +131,7 @@ namespace TicTacToe.Api.Services
             lock (game)
             {
                 if (game.MoveHistory.Count == 0) throw new Exception("No moves to undo");
+                if (!game.CanUndo) throw new Exception("Cannot undo multiple times without making a move");
 
                 bool wasCompleted = game.Status != "InProgress";
                 string? oldWinner = game.Winner;
@@ -161,6 +163,7 @@ namespace TicTacToe.Api.Services
                 game.Status = "InProgress";
                 game.Winner = null;
                 game.WinningCells.Clear();
+                game.CanUndo = false;
 
                 if (wasCompleted)
                 {
@@ -198,6 +201,7 @@ namespace TicTacToe.Api.Services
                 game.Winner = null;
                 game.WinningCells.Clear();
                 game.MoveHistory.Clear();
+                game.CanUndo = false;
                 return Duplicate(game);
             }
         }
@@ -366,6 +370,7 @@ namespace TicTacToe.Api.Services
                 Difficulty = src.Difficulty,
                 Status = src.Status,
                 Winner = src.Winner,
+                CanUndo = src.CanUndo,
                 WinningCells = src.WinningCells.Select(c => new Position { Row = c.Row, Col = c.Col }).ToList(),
                 MoveHistory = src.MoveHistory.Select(m => new Move { MoveNumber = m.MoveNumber, Player = m.Player, Position = new Position { Row = m.Position.Row, Col = m.Position.Col }, Timestamp = m.Timestamp }).ToList()
             };

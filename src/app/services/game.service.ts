@@ -40,6 +40,7 @@ export class GameService {
     return throwError(() => new Error(errorMsg));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private normalizeScoreboard(raw: any): Scoreboard {
     const pvp = raw?.pvp ?? raw?.pvP ?? { xWins: 0, oWins: 0, draws: 0 };
     const pvc = raw?.pvc ?? raw?.pvC ?? { xWins: 0, oWins: 0, draws: 0 };

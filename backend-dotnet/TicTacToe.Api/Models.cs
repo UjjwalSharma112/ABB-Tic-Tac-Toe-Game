@@ -28,6 +28,7 @@ namespace TicTacToe.Api.Models
         public string? Winner { get; set; }
         public List<Position> WinningCells { get; set; } = new();
         public List<Move> MoveHistory { get; set; } = new();
+        public bool CanUndo { get; set; }
     }
 
     public class ScoreStats

@@ -50,4 +50,33 @@ public class GameServiceTests
         var scoreboard = _service.GetScoreboard();
         Assert.Equal(1, scoreboard.PvP.XWins);
     }
+
+    [Fact]
+    public void UndoMove_PvP_ShouldRemoveMostRecentMoveAndResetWinner()
+    {
+        var game = _service.CreateGame("PvP");
+        _service.MakeMove(game.GameId, "X", 0, 0);
+        _service.MakeMove(game.GameId, "O", 1, 0);
+        
+        var undoneGame = _service.UndoMove(game.GameId);
+        
+        Assert.Equal("O", undoneGame.CurrentPlayer);
+        Assert.Null(undoneGame.Board[1][0]);
+        Assert.Single(undoneGame.MoveHistory);
+        Assert.False(undoneGame.CanUndo);
+    }
+
+    [Fact]
+    public void UndoMove_PvC_ShouldRemoveBothMoves()
+    {
+        var game = _service.CreateGame("PvC", "Medium"); // X plays, then O plays automatically
+        _service.MakeMove(game.GameId, "X", 0, 0);
+        
+        var undoneGame = _service.UndoMove(game.GameId);
+        
+        Assert.Equal("X", undoneGame.CurrentPlayer);
+        Assert.Null(undoneGame.Board[0][0]);
+        Assert.Empty(undoneGame.MoveHistory);
+        Assert.False(undoneGame.CanUndo);
+    }
 }

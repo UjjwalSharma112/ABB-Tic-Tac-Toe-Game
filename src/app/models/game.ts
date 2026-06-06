@@ -20,6 +20,7 @@ export interface GameState {
   winner: Player;
   winningCells: { row: number, col: number }[];
   moveHistory: Move[];
+  canUndo: boolean;
 }
 
 export interface Scoreboard {
